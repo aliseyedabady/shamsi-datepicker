@@ -1,3 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "./fonts/dana/style.css";
+
+body {
+  font-family: Dana;
+  background-color: #adafb3;
+}
+.main-wrapper {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
