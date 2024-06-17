@@ -34,6 +34,7 @@
         align-items: center;
         justify-content: center;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 4px;
+        cursor: pointer;
       }
       .selects-wrapper {
         display: flex;
@@ -47,6 +48,7 @@
           border-radius: 6px;
           padding: 8px 12px;
           box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 4px;
+          cursor: pointer;
         }
       }
     }
@@ -83,6 +85,66 @@
           font-weight: 500;
         }
       }
+    }
+    .select-month-wrapper {
+      .select-month-items-wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        .select-month-item {
+          text-align: center;
+          font-size: 18px;
+          font-weight: 500;
+          color: #001754;
+          background-color: transparent;
+          border: none;
+          padding: 8px 12px;
+          cursor: pointer;
+          border-radius: 4px;
+
+          &:hover {
+            background-color: #7ba1ff;
+            color: #fff;
+          }
+        }
+        .active-month-item {
+          background-color: #0047ff;
+          color: #fff;
+        }
+      }
+    }
+    .select-year-wrapper {
+      .select-years-items-wrapper {
+        max-height: 300px;
+        overflow-y: scroll;
+        padding-left: 10px;
+        scrollbar-color: #0047ff transparent;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        .select-year-item {
+          grid-column: span 1 / span 1;
+          border: none;
+          background-color: transparent;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 500;
+          color: #001754;
+          background-color: transparent;
+          border: none;
+          padding: 8px 12px;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+        .active-year-item {
+          background-color: #0047ff;
+          color: #fff;
+        }
+      }
+    }
+    .select-back {
+      border: none;
+      background-color: transparent;
+      margin-bottom: 8px;
     }
   }
 }

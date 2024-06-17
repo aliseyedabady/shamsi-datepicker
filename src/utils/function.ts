@@ -1,7 +1,24 @@
 import moment, { Moment } from "moment-jalaali";
+
 moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
 
+type TState = "normal" | "month" | "year";
+
 const daysOfWeek = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
+const jalaliMonths = [
+  "فروردین",
+  "اردیبهشت",
+  "خرداد",
+  "تیر",
+  "مرداد",
+  "شهریور",
+  "مهر",
+  "آبان",
+  "آذر",
+  "دی",
+  "بهمن",
+  "اسفند",
+];
 
 const getDayOfWeek = (day: moment.Moment) => {
   return daysOfWeek.indexOf(day.format("dd"));
@@ -33,12 +50,41 @@ const isInCurrentMonth = (month: Moment, day: moment.Moment) => {
 const isToday = (date: moment.Moment): boolean => {
   return moment().isSame(date, "day");
 };
+const e2p = (s: number) =>
+  s.toString().replace(/[0-9]/g, d => "۰۱۲۳۴۵۶۷۸۹".split("")[+d]);
+
+const p2e = (s: string) =>
+  s.replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d).toString());
+
+const getAllYears = (startYear: number, endYear: number): string[] => {
+  let years: number[] = [];
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(year);
+  }
+  return years.map(year => e2p(year));
+};
+
+const findIndexOfYear = (years: string[], currentYear: string) =>
+  years.indexOf(currentYear);
+
+function classNames(...classes: (string | undefined | null | false)[]): string {
+  return classes.filter(Boolean).join(" ");
+}
 
 export {
+  type Moment,
+  type TState,
   getDayOfWeek,
   daysOfWeek,
   isInCurrentMonth,
   getPrevMonthDays,
   getNextMonthDays,
   isToday,
+  jalaliMonths,
+  getAllYears,
+  e2p,
+  p2e,
+  findIndexOfYear,
+  moment,
+  classNames,
 };

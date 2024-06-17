@@ -1,18 +1,31 @@
-import moment, { Moment } from "moment-jalaali";
 import { useEffect, useRef, useState } from "react";
 import {
+  Moment,
+  TState,
+  classNames,
   daysOfWeek,
+  findIndexOfYear,
+  getAllYears,
   getNextMonthDays,
   getPrevMonthDays,
   isInCurrentMonth,
   isToday,
+  jalaliMonths,
+  moment,
+  p2e,
 } from "../utils/function";
 import "./style.css";
-moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
 
-const Calender = () => {
+interface CalenderProps {
+  wrapperClassName?: string;
+}
+
+const Calender: React.FC<CalenderProps> = ({ wrapperClassName }) => {
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
-  const contentRef = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<TState>("normal");
+  const yearsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const allYears = getAllYears(1360, 1440);
+  const currentYear = currentDate.format("jYYYY");
 
   const renderDays = () => {
     const daysInCurrentMonth =
@@ -38,84 +51,203 @@ const Calender = () => {
 
     return weeks;
   };
-  const handleNextMonth = () => {
+  const handleNextMonth = () =>
     setCurrentDate(currentDate.clone().add(1, "jMonth"));
+
+  const handlePreviousMonth = () =>
+    setCurrentDate(currentDate.clone().subtract(1, "jMonth"));
+
+  const back = () => setState("normal");
+
+  const changeState = (newState: TState) => setState(newState);
+
+  const handleSelectMonth = (month: string) => {
+    setCurrentDate(moment().jMonth(jalaliMonths.indexOf(month)));
+    changeState("normal");
+  };
+  const handleSelectYear = (year: string) => {
+    setCurrentDate(moment().jYear(+p2e(year)));
+    changeState("normal");
   };
 
-  const handlePreviousMonth = () => {
-    setCurrentDate(currentDate.clone().subtract(1, "jMonth"));
+  useEffect(() => {
+    const currentYearIndex = findIndexOfYear(allYears, currentYear);
+    if (yearsRef.current[currentYearIndex]) {
+      yearsRef.current[currentYearIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [currentYear, allYears]);
+
+  const render = () => {
+    switch (state) {
+      case "normal":
+        return (
+          <>
+            <div className="options-wrapper">
+              <button className="next-month-button" onClick={handleNextMonth}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M9 6l6 6l-6 6" />
+                </svg>
+              </button>
+              <div className="selects-wrapper">
+                <button
+                  className="select-month-button"
+                  onClick={() => changeState("month")}
+                >
+                  {currentDate.format("jMMMM")}
+                </button>
+                <button
+                  className="select-year-button"
+                  onClick={() => changeState("year")}
+                >
+                  {currentDate.format("jYYYY")}
+                </button>
+              </div>
+              <button
+                className="prev-month-button"
+                onClick={handlePreviousMonth}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M15 6l-6 6l6 6" />
+                </svg>
+              </button>
+            </div>
+            <div className="header-wrapper">
+              {daysOfWeek.map(day => (
+                <div className="header-item" key={day}>
+                  <span>{day}</span>
+                </div>
+              ))}
+            </div>
+            <div className="body-calender-wrapper">
+              {renderDays().map(week =>
+                week.map((day, dayIndex) => {
+                  return (
+                    <div
+                      className={`day-item ${
+                        isInCurrentMonth(currentDate, day)
+                          ? "current-month-day-item"
+                          : "incurrent-month-day-item"
+                      } ${isToday(day) ? "today-day-item" : ""}`}
+                      key={dayIndex}
+                    >
+                      <span>{day ? day.format("jDD") : ""}</span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </>
+        );
+
+      case "month":
+        return (
+          <div className="select-month-wrapper">
+            <div>
+              <button onClick={back} className="select-back">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M9 6l6 6l-6 6" />
+                </svg>
+              </button>
+            </div>
+            <div className="select-month-items-wrapper">
+              {jalaliMonths.map(month => (
+                <button
+                  onClick={() => handleSelectMonth(month)}
+                  key={month}
+                  className={`select-month-item ${
+                    month === currentDate.format("jMMMM")
+                      ? "active-month-item"
+                      : ""
+                  }`}
+                >
+                  <span>{month}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case "year":
+        return (
+          <div className="select-year-wrapper">
+            <div>
+              <button onClick={back} className="select-back">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M9 6l6 6l-6 6" />
+                </svg>
+              </button>
+            </div>
+            <div className="select-years-items-wrapper">
+              {allYears.map((year, index) => (
+                <button
+                  onClick={() => handleSelectYear(year)}
+                  ref={el => (yearsRef.current[index] = el)}
+                  className={`select-year-item  ${
+                    year === currentYear ? "active-year-item" : ""
+                  }`}
+                >
+                  <span>{year}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      default:
+        break;
+    }
   };
 
   return (
     <div className="shamsi-date-picker">
-      <div className="calender-wrapper" ref={contentRef}>
-        <div className="options-wrapper">
-          <button className="next-month-button" onClick={handleNextMonth}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M13.22 13.024c-1.752 1.401-3.897 3.534-5.338 6.417l2.236 1.118c1.226-2.45 3.081-4.317 4.663-5.583a20 20 0 0 1 2-1.411 15 15 0 0 1 .74-.427l.033-.017.005-.003v-2.235l-.005-.003-.034-.018-.15-.081c-.136-.075-.337-.19-.59-.346a20 20 0 0 1-1.999-1.411c-1.582-1.266-3.437-3.132-4.663-5.583L7.882 4.559c1.441 2.883 3.586 5.016 5.337 6.417.496.397.965.738 1.382 1.024a23 23 0 0 0-1.382 1.024"
-                fill="#000"
-              />
-            </svg>
-          </button>
-          <div className="selects-wrapper">
-            <button className="select-month-button">
-              {currentDate.format("jMMMM")}
-            </button>
-            <button className="select-year-button">
-              {currentDate.format("jYYYY")}
-            </button>
-          </div>
-          <button className="prev-month-button" onClick={handlePreviousMonth}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M10.78 13.024c1.752 1.401 3.897 3.534 5.338 6.417l-2.236 1.118c-1.225-2.45-3.08-4.317-4.663-5.583-.786-.63-1.493-1.1-2-1.411a15 15 0 0 0-.74-.427l-.033-.017-.005-.003v-2.235l.005-.003.034-.018.15-.081c.136-.075.337-.19.59-.346a20 20 0 0 0 2-1.411c1.581-1.266 3.437-3.132 4.662-5.583l2.236 1.118c-1.441 2.883-3.586 5.016-5.337 6.417-.496.397-.965.738-1.382 1.024.417.286.886.627 1.382 1.024"
-                fill="#000"
-              />
-            </svg>
-          </button>
-        </div>
-        <div className="header-wrapper">
-          {daysOfWeek.map(day => (
-            <div className="header-item" key={day}>
-              <span>{day}</span>
-            </div>
-          ))}
-        </div>
-        <div className="body-calender-wrapper">
-          {renderDays().map(week =>
-            week.map((day, dayIndex) => {
-              return (
-                <div
-                  className={`day-item ${
-                    isInCurrentMonth(currentDate, day)
-                      ? "current-month-day-item"
-                      : "incurrent-month-day-item"
-                  } ${isToday(day) ? "today-day-item" : ""}`}
-                  key={dayIndex}
-                >
-                  <span>{day ? day.format("jDD") : ""}</span>
-                </div>
-              );
-            })
-          )}
-        </div>
+      <div className={classNames("calender-wrapper", wrapperClassName)}>
+        {render()}
       </div>
     </div>
   );
