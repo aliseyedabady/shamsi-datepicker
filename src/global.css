@@ -1,8 +1,10 @@
 @import "./fonts/dana/style.css";
 
 body {
-  font-family: Dana;
   background-color: #adafb3;
+}
+* {
+  font-family: Dana;
 }
 .main-wrapper {
   display: flex;

@@ -26,17 +26,12 @@ const getNextMonthDays = (
   });
 };
 
-const isInCurrentMonth = (month: Moment, day: moment.Moment | null) => {
-  if (day) {
-    return month.jMonth() === day.jMonth();
-  }
+const isInCurrentMonth = (month: Moment, day: moment.Moment) => {
+  return month.jMonth() === day.jMonth();
+};
 
-  // if (day) {
-  //   const startOfCurrentMonth = month.startOf("jMonth");
-  //   const endOfCurrentMonth = month.endOf("jMonth");
-  //   return day.isBetween(startOfCurrentMonth, endOfCurrentMonth, "day", "[]");
-  // }
-  // return null;
+const isToday = (date: moment.Moment): boolean => {
+  return moment().isSame(date, "day");
 };
 
 export {
@@ -45,4 +40,5 @@ export {
   isInCurrentMonth,
   getPrevMonthDays,
   getNextMonthDays,
+  isToday,
 };
