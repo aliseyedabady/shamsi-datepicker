@@ -1,4 +1,4 @@
-import Calender from "./components/Calender";
+import Calender from "./components/calender/calender";
 import "./global.css";
 
 const App = () => {

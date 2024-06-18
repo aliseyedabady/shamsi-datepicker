@@ -2,10 +2,10 @@ import moment, { Moment } from "moment-jalaali";
 
 moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
 
-type TState = "normal" | "month" | "year";
+type TState = "day" | "month" | "year";
 
 const daysOfWeek = ["ش", "ی", "د", "س", "چ", "پ", "ج"];
-const jalaliMonths = [
+const months = [
   "فروردین",
   "اردیبهشت",
   "خرداد",
@@ -80,7 +80,7 @@ export {
   getPrevMonthDays,
   getNextMonthDays,
   isToday,
-  jalaliMonths,
+  months,
   getAllYears,
   e2p,
   p2e,
