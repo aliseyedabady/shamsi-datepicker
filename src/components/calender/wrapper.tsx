@@ -1,9 +1,7 @@
 import React from "react";
 import { classNames } from "../../utils/function";
-interface WrapperCalenderProps {
-  wrapperClassName?: string;
-  children: React.ReactNode | React.ReactNode[];
-}
+import { WrapperCalenderProps } from "./types";
+
 const WrapperCalender: React.FC<WrapperCalenderProps> = ({
   wrapperClassName,
   children,

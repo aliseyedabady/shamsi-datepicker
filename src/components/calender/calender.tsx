@@ -5,19 +5,15 @@ import SelectMonth from "./selectMonth";
 import SelectYear from "./selectYear";
 import "./style.css";
 import WrapperCalender from "./wrapper";
+import { CalenderProps } from "./types";
 
-interface CalenderProps {
-  wrapperClassName?: string;
-  year?: {
-    from?: number;
-    to?: number;
-  };
-  day?: {
-    format?: string;
-  };
-}
-
-const Calender: React.FC<CalenderProps> = ({ wrapperClassName, year, day }) => {
+const Calender: React.FC<CalenderProps> = ({
+  wrapperClassName,
+  year,
+  day,
+  onChange,
+  value,
+}) => {
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [state, setState] = useState<TState>("day");
   const allYears = getAllYears(year?.from || 1360, year?.to || 1440);
@@ -28,6 +24,8 @@ const Calender: React.FC<CalenderProps> = ({ wrapperClassName, year, day }) => {
       currentDate,
       setCurrentDate,
       setState,
+      onChange,
+      value,
     },
     month: {
       currentDate,
@@ -50,7 +48,6 @@ const Calender: React.FC<CalenderProps> = ({ wrapperClassName, year, day }) => {
         return <SelectMonth {...props.month} />;
       case "year":
         return <SelectYear {...props.year} />;
-
       default:
         return <></>;
     }

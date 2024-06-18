@@ -77,6 +77,8 @@
       .day-item {
         grid-column: span 1 / span 1;
         text-align: center;
+        cursor: pointer;
+        border: none;
 
         padding: 10px;
         span {
