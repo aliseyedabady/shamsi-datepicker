@@ -11,7 +11,8 @@ interface CalenderProps {
     format?: string;
   };
   onChange?: (date: Moment) => void;
-  value?: Moment;
+  value?: Moment | Moment[];
+  isMulti?: boolean;
 }
 interface BackProps {
   setState: React.Dispatch<React.SetStateAction<TState>>;
@@ -19,7 +20,7 @@ interface BackProps {
 interface BodyProps {
   currentDate: Moment;
   onChange?: (date: Moment) => void;
-  value?: Moment;
+  value?: Moment | Moment[];
 }
 interface OptionsProps {
   setCurrentDate: React.Dispatch<React.SetStateAction<Moment>>;
@@ -31,7 +32,7 @@ interface SelectDayProps {
   currentDate: Moment;
   setState: React.Dispatch<React.SetStateAction<TState>>;
   onChange?: (date: Moment) => void;
-  value?: Moment;
+  value?: Moment | Moment[];
 }
 interface SelectMonthProps {
   setState: React.Dispatch<React.SetStateAction<TState>>;

@@ -1,6 +1,8 @@
 import {
+  classNames,
   getNextMonthDays,
   getPrevMonthDays,
+  isEqualTwoDate,
   isInCurrentMonth,
   isToday,
   moment,
@@ -36,14 +38,23 @@ const Body: React.FC<BodyProps> = ({ currentDate, onChange, value }) => {
     <div className="body-calender-wrapper">
       {renderDays().map(week =>
         week.map((day, dayIndex) => {
+          console.log(day.format("jDD/jMM/jYYYY"));
           return (
             <button
               onClick={() => onChange && onChange(day)}
-              className={`day-item ${
+              className={classNames(
+                "day-item",
                 isInCurrentMonth(currentDate, day)
                   ? "current-month-day-item"
-                  : "incurrent-month-day-item"
-              } ${isToday(day) ? "today-day-item" : ""}`}
+                  : "incurrent-month-day-item",
+                value
+                  ? isEqualTwoDate(value, day)
+                    ? "today-day-item"
+                    : ""
+                  : isToday(day)
+                  ? "today-day-item"
+                  : ""
+              )}
               key={dayIndex}
             >
               <span>{day ? day.format("jDD") : ""}</span>

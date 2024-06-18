@@ -67,9 +67,25 @@ const getAllYears = (startYear: number, endYear: number): string[] => {
 const findIndexOfYear = (years: string[], currentYear: string) =>
   years.indexOf(currentYear);
 
-function classNames(...classes: (string | undefined | null | false)[]): string {
+const classNames = (
+  ...classes: (string | undefined | null | false | true)[]
+): string => {
   return classes.filter(Boolean).join(" ");
-}
+};
+
+const isEqualTwoDate = (date1: Moment | Moment[], date2: Moment): boolean => {
+  if (Array.isArray(date1)) {
+    let isIn: boolean = false;
+    date1.forEach(date => {
+      if (isEqualTwoDate(date, date2)) {
+        isIn = true;
+      }
+    });
+    return isIn;
+  } else {
+    return date1.format("jDD/jMM/jYYYY") === date2.format("jDD/jMM/jYYYY");
+  }
+};
 
 export {
   type Moment,
@@ -87,4 +103,5 @@ export {
   findIndexOfYear,
   moment,
   classNames,
+  isEqualTwoDate,
 };
