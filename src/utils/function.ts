@@ -73,7 +73,16 @@ const classNames = (
   return classes.filter(Boolean).join(" ");
 };
 
-const isEqualTwoDate = (date1: Moment | Moment[], date2: Moment): boolean => {
+const isEqualTwoDate = (
+  date1: Moment | Moment[] | undefined,
+  date2: Moment | undefined
+): boolean => {
+  if (!date2) {
+    return false;
+  }
+  if (!date1) {
+    return false;
+  }
   if (Array.isArray(date1)) {
     let isIn: boolean = false;
     date1.forEach(date => {

@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  Moment,
   classNames,
   getNextMonthDays,
   getPrevMonthDays,
@@ -10,6 +12,7 @@ import {
 import { BodyProps } from "./types";
 
 const Body: React.FC<BodyProps> = ({ currentDate, onChange, value }) => {
+  const [isSelected, setIsSelected] = useState<boolean>(false);
   const renderDays = () => {
     const daysInCurrentMonth =
       currentDate.endOf("jMonth").jDayOfYear() -
@@ -34,6 +37,12 @@ const Body: React.FC<BodyProps> = ({ currentDate, onChange, value }) => {
 
     return weeks;
   };
+  const renderDayItemClassName = (day: Moment): string => {
+    if (isSelected) {
+      return isEqualTwoDate(value, day) ? "today-day-item" : "";
+    }
+    return isToday(day) ? "today-day-item" : "";
+  };
   return (
     <div className="body-calender-wrapper">
       {renderDays().map(week =>
@@ -41,19 +50,16 @@ const Body: React.FC<BodyProps> = ({ currentDate, onChange, value }) => {
           console.log(day.format("jDD/jMM/jYYYY"));
           return (
             <button
-              onClick={() => onChange && onChange(day)}
+              onClick={() => {
+                onChange && onChange(day);
+                setIsSelected(true);
+              }}
               className={classNames(
                 "day-item",
                 isInCurrentMonth(currentDate, day)
                   ? "current-month-day-item"
                   : "incurrent-month-day-item",
-                value
-                  ? isEqualTwoDate(value, day)
-                    ? "today-day-item"
-                    : ""
-                  : isToday(day)
-                  ? "today-day-item"
-                  : ""
+                renderDayItemClassName(day)
               )}
               key={dayIndex}
             >

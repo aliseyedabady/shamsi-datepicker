@@ -1,14 +1,16 @@
 import { useState } from "react";
 import Calender from "./components/calender/calender";
-import { Moment, moment } from "./utils/function";
+import { Moment, isEqualTwoDate, moment } from "./utils/function";
 import "./global.css";
 
 const App = () => {
-  const [date, setDate] = useState<Moment[]>([moment()]);
+  const [date, setDate] = useState<Moment | undefined>(moment());
   return (
     <div className="main-wrapper">
       <Calender
-        onChange={newDate => setDate([...date, newDate])}
+        onChange={newDate => {
+          setDate(isEqualTwoDate(newDate, date) ? undefined : newDate);
+        }}
         value={date}
       />
     </div>
