@@ -10,6 +10,7 @@ const SelectDay: React.FC<SelectDayProps> = ({
   setState,
   onChange,
   value,
+  range,
 }) => {
   return (
     <>
@@ -19,7 +20,12 @@ const SelectDay: React.FC<SelectDayProps> = ({
         currentDate={currentDate}
       />
       <DaysOfWeek />
-      <Body value={value} onChange={onChange} currentDate={currentDate} />
+      <Body
+        range={range}
+        value={value}
+        onChange={onChange}
+        currentDate={currentDate}
+      />
     </>
   );
 };

@@ -63,6 +63,7 @@
         box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 4px;
       }
       .incurrent-month-day-item {
+        cursor: not-allowed !important;
         span {
           color: #001754;
           opacity: 0.15;

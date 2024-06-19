@@ -10,17 +10,18 @@ interface CalenderProps {
   day?: {
     format?: string;
   };
-  onChange?: (date: Moment) => void;
-  value?: Moment | Moment[];
-  isMulti?: boolean;
+  onChange?: onChange;
+  value?: Moment | Moment[] | null;
+  range?: Range;
 }
 interface BackProps {
   setState: React.Dispatch<React.SetStateAction<TState>>;
 }
 interface BodyProps {
   currentDate: Moment;
-  onChange?: (date: Moment) => void;
-  value?: Moment | Moment[];
+  onChange?: onChange;
+  value?: Moment | Moment[] | null;
+  range?: Range;
 }
 interface OptionsProps {
   setCurrentDate: React.Dispatch<React.SetStateAction<Moment>>;
@@ -31,8 +32,9 @@ interface SelectDayProps {
   setCurrentDate: React.Dispatch<React.SetStateAction<Moment>>;
   currentDate: Moment;
   setState: React.Dispatch<React.SetStateAction<TState>>;
-  onChange?: (date: Moment) => void;
-  value?: Moment | Moment[];
+  onChange?: onChange;
+  value?: Moment | Moment[] | null;
+  range?: Range;
 }
 interface SelectMonthProps {
   setState: React.Dispatch<React.SetStateAction<TState>>;
@@ -49,6 +51,12 @@ interface WrapperCalenderProps {
   wrapperClassName?: string;
   children: React.ReactNode | React.ReactNode[];
 }
+interface Range {
+  setValue: React.Dispatch<React.SetStateAction<RangeValue>>;
+  value: RangeValue;
+}
+type RangeValue = [Moment | null, Moment | null];
+type onChange = (date: Moment | null) => void;
 export {
   BackProps,
   BodyProps,
@@ -58,4 +66,6 @@ export {
   SelectMonthProps,
   SelectYearProps,
   WrapperCalenderProps,
+  RangeValue,
+  onChange,
 };

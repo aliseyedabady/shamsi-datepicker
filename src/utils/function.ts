@@ -1,4 +1,5 @@
 import moment, { Moment } from "moment-jalaali";
+import { RangeValue } from "../components/calender/types";
 
 moment.loadPersian({ dialect: "persian-modern", usePersianDigits: true });
 
@@ -74,8 +75,8 @@ const classNames = (
 };
 
 const isEqualTwoDate = (
-  date1: Moment | Moment[] | undefined,
-  date2: Moment | undefined
+  date1: Moment | Moment[] | null,
+  date2: Moment | null
 ): boolean => {
   if (!date2) {
     return false;
@@ -96,6 +97,45 @@ const isEqualTwoDate = (
   }
 };
 
+const renderDays = (currentDate: Moment) => {
+  const daysInCurrentMonth =
+    currentDate.endOf("jMonth").jDayOfYear() -
+    currentDate.startOf("jMonth").jDayOfYear() +
+    1;
+
+  const startOfMonth = currentDate.startOf("jMonth");
+  const daysArray = Array.from({ length: daysInCurrentMonth }, (_, i) => {
+    return startOfMonth.clone().add(i, "days");
+  });
+  const weeks: moment.Moment[][] = [];
+
+  const allDaysArray = [
+    ...getPrevMonthDays(daysArray),
+    ...daysArray,
+    ...getNextMonthDays(daysArray, daysInCurrentMonth),
+  ];
+
+  for (let i = 0; i < allDaysArray.length; i += 7) {
+    weeks.push(allDaysArray.slice(i, i + 7));
+  }
+
+  return weeks;
+};
+
+const isBetweenTwoDate = (dates: RangeValue, date: Moment) => {
+  const dateToCheck = moment(date);
+  const start = moment(dates[0]);
+  const end = moment(dates[1]);
+
+  return dateToCheck.isBetween(start, end, undefined, "[]");
+};
+
+const isAfter = (firstDate: Moment, secondDate: Moment) => {
+  return firstDate.isAfter(secondDate);
+};
+const isBefore = (firstDate: Moment, secondDate: Moment) => {
+  return firstDate.isBefore(secondDate);
+};
 export {
   type Moment,
   type TState,
@@ -113,4 +153,8 @@ export {
   moment,
   classNames,
   isEqualTwoDate,
+  renderDays,
+  isBetweenTwoDate,
+  isAfter,
+  isBefore,
 };

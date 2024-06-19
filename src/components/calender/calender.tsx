@@ -13,6 +13,7 @@ const Calender: React.FC<CalenderProps> = ({
   day,
   onChange,
   value,
+  range,
 }) => {
   const [currentDate, setCurrentDate] = useState<Moment>(moment());
   const [state, setState] = useState<TState>("day");
@@ -26,6 +27,7 @@ const Calender: React.FC<CalenderProps> = ({
       setState,
       onChange,
       value,
+      range,
     },
     month: {
       currentDate,

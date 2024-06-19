@@ -2,61 +2,71 @@ import { useState } from "react";
 import {
   Moment,
   classNames,
-  getNextMonthDays,
-  getPrevMonthDays,
+  isAfter,
+  isBetweenTwoDate,
   isEqualTwoDate,
   isInCurrentMonth,
   isToday,
-  moment,
+  renderDays,
 } from "../../utils/function";
 import { BodyProps } from "./types";
 
-const Body: React.FC<BodyProps> = ({ currentDate, onChange, value }) => {
+const Body: React.FC<BodyProps> = ({ currentDate, onChange, value, range }) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
-  const renderDays = () => {
-    const daysInCurrentMonth =
-      currentDate.endOf("jMonth").jDayOfYear() -
-      currentDate.startOf("jMonth").jDayOfYear() +
-      1;
-
-    const startOfMonth = currentDate.startOf("jMonth");
-    const daysArray = Array.from({ length: daysInCurrentMonth }, (_, i) => {
-      return startOfMonth.clone().add(i, "days");
-    });
-    const weeks: moment.Moment[][] = [];
-
-    const allDaysArray = [
-      ...getPrevMonthDays(daysArray),
-      ...daysArray,
-      ...getNextMonthDays(daysArray, daysInCurrentMonth),
-    ];
-
-    for (let i = 0; i < allDaysArray.length; i += 7) {
-      weeks.push(allDaysArray.slice(i, i + 7));
-    }
-
-    return weeks;
-  };
+  const [stepRange, setStepRange] = useState<1 | 2 | 3>(1);
+  console.log(range?.value, stepRange);
   const renderDayItemClassName = (day: Moment): string => {
+    const isInCurrentMonthValue = isInCurrentMonth(currentDate, day);
+
+    if (range?.value[0] && range.value[1]) {
+      return isBetweenTwoDate(range.value, day) && isInCurrentMonthValue
+        ? "today-day-item"
+        : "";
+    }
     if (isSelected) {
-      return isEqualTwoDate(value, day) ? "today-day-item" : "";
+      if (range) {
+        return isEqualTwoDate(range.value[0] || range.value[1], day)
+          ? "today-day-item"
+          : "";
+      }
+      return value && isEqualTwoDate(value, day) ? "today-day-item" : "";
     }
     return isToday(day) ? "today-day-item" : "";
   };
+  const handleOnClick = (day: Moment) => {
+    const isInCurrentMonthValue = isInCurrentMonth(currentDate, day);
+    if (isInCurrentMonthValue) {
+      if (range) {
+        if (range.value[0] && range.value[1]) {
+          range.setValue([day, null]);
+          setStepRange(2);
+        } else if (range.value[0] && isAfter(range.value[0], day)) {
+          range.setValue([day, null]);
+          setStepRange(2);
+        } else {
+          range.setValue(
+            stepRange === 1 ? [day, range.value[1]] : [range.value[0], day]
+          );
+          setStepRange(prev => (prev === 1 ? 2 : 1));
+        }
+      } else if (onChange) {
+        onChange(isToday(day) ? null : day);
+      }
+      setIsSelected(true);
+    }
+  };
   return (
     <div className="body-calender-wrapper">
-      {renderDays().map(week =>
+      {renderDays(currentDate).map(week =>
         week.map((day, dayIndex) => {
-          console.log(day.format("jDD/jMM/jYYYY"));
+          const isInCurrentMonthValue = isInCurrentMonth(currentDate, day);
+
           return (
             <button
-              onClick={() => {
-                onChange && onChange(day);
-                setIsSelected(true);
-              }}
+              onClick={() => handleOnClick(day)}
               className={classNames(
                 "day-item",
-                isInCurrentMonth(currentDate, day)
+                isInCurrentMonthValue
                   ? "current-month-day-item"
                   : "incurrent-month-day-item",
                 renderDayItemClassName(day)
