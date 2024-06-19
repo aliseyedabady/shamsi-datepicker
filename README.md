@@ -20,6 +20,52 @@ or
 
 This will install the latest version of samin-datepicker and add it as a dependency to your project.
 
+# DatePicker
+
+The **DatePicker** component is a standalone calendar picker that allows the user to select a single date.
+
+```typescript
+import { useState } from "react";
+import DatePicker from "samin-datepicker";
+import { Moment } from "moment-jalaali";
+
+function App() {
+  const [date, setDate] = useState<Moment | null>(moment());
+
+  return (
+    <DatePicker
+      onChange={newDate => {
+        setDate(newDate);
+      }}
+      value={date}
+    />
+  );
+}
+```
+
+# RangePicker
+
+The **RangePicker** component is a calendar picker that allows the user to select a range of dates.
+
+```typescript
+import { useState } from "react";
+import DatePicker from "samin-datepicker";
+import { Moment } from "moment-jalaali";
+
+function App() {
+  const [range, setRange] = useState<RangeValue>([null, null]);
+
+  return (
+    <DatePicker
+      range={{
+        setValue: setRange,
+        value: range,
+      }}
+    />
+  );
+}
+```
+
 ## Authors
 
 - [@aliseyedabady](https://github.com/aliseyedabady)
