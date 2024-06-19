@@ -16,6 +16,8 @@ or
   yarn add samin-datepicker
 ```
 
+## Usage/Examples
+
 This will install the latest version of samin-datepicker and add it as a dependency to your project.
 
 ## Authors
@@ -25,3 +27,7 @@ This will install the latest version of samin-datepicker and add it as a depende
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Dedicated
+
+Dedicated to my dear Samin
