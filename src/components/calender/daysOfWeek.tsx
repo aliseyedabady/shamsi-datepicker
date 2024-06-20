@@ -1,3 +1,4 @@
+import React from "react";
 import { daysOfWeek } from "../../utils/function";
 
 const DaysOfWeek = () => {
